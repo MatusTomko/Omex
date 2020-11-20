@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,5 +75,127 @@ namespace Microsoft.Omex.Extensions.Compatibility.UnitTests
 			string? value = Activity.Current?.Tags.FirstOrDefault(p => string.Equals(p.Key, ActivityTagKeys.Result, StringComparison.Ordinal)).Value;
 			Assert.AreEqual(expectedResult, value);
 		}
+
+		[TestMethod]
+		public void Code_Expects_ThrowException()
+		{
+			
+			EventId eventId = new EventId(1);
+			string logMessage = "TestLogMessage";
+			new HostBuilder()
+				.ConfigureServices(collection =>
+				{
+					collection
+						.AddTimedScopes()
+						.AddOmexCompatibilityServices();
+				})
+				.Build()
+				.Start();
+			Assert.ThrowsException<OmexCompatibilityInitializationException>(() => Code.Expects<OmexCompatibilityInitializationException>(false, logMessage, eventId));
+
+		}
+
+		[TestMethod]
+		public void Code_ExpectsArgument_ThrowException()
+		{
+			
+			EventId eventId = new EventId(1);
+			string logMessage = "TestLogMessage";
+			new HostBuilder()
+				.ConfigureServices(collection =>
+				{
+					collection
+						.AddTimedScopes()
+						.AddOmexCompatibilityServices();
+				})
+				.Build()
+				.Start();
+			Assert.ThrowsException<ArgumentNullException>(() => Code.ExpectsArgument<int?>(null, logMessage, eventId));
+
+		}
+
+		[TestMethod]
+		public void Code_ExpectsArgument_ReturnArgumentValue()
+		{
+
+			EventId eventId = new EventId(1);
+			string logMessage = "TestLogMessage";
+			int? value = 2;
+			new HostBuilder()
+				.ConfigureServices(collection =>
+				{
+					collection
+						.AddTimedScopes()
+						.AddOmexCompatibilityServices();
+				})
+				.Build()
+				.Start();
+			int? argumentValue = Code.ExpectsArgument<int?>(2, logMessage, eventId);
+
+			Assert.AreEqual(value, argumentValue);
+
+		}
+
+		[TestMethod]
+		public void Code_ExpectsNotNullOrWhiteSpaceArgument_ThrowArgumentException()
+		{
+
+			EventId eventId = new EventId(1);
+			string logMessage = "TestLogMessage";
+			new HostBuilder()
+				.ConfigureServices(collection =>
+				{
+					collection
+						.AddTimedScopes()
+						.AddOmexCompatibilityServices();
+				})
+				.Build()
+				.Start();
+			Assert.ThrowsException<ArgumentException>(() => Code.ExpectsNotNullOrWhiteSpaceArgument(" ", logMessage, eventId));
+
+		}
+
+		[TestMethod]
+		public void Code_ExpectsNotNullOrWhiteSpaceArgument_ThrowArgumentNullException()
+		{
+
+			EventId eventId = new EventId(1);
+			string logMessage = "TestLogMessage";
+			new HostBuilder()
+				.ConfigureServices(collection =>
+				{
+					collection
+						.AddTimedScopes()
+						.AddOmexCompatibilityServices();
+				})
+				.Build()
+				.Start();
+			Assert.ThrowsException<ArgumentNullException>(() => Code.ExpectsNotNullOrWhiteSpaceArgument(null, logMessage, eventId));
+
+		}
+
+		[TestMethod]
+		public void Code_ExpectsNotNullOrWhiteSpaceArgument_ReturnArgumentValue()
+		{
+
+			EventId eventId = new EventId(1);
+			string logMessage = "TestLogMessage";
+			string value = "test";
+			new HostBuilder()
+				.ConfigureServices(collection =>
+				{
+					collection
+						.AddTimedScopes()
+						.AddOmexCompatibilityServices();
+				})
+				.Build()
+				.Start();
+			string argumentValue = Code.ExpectsNotNullOrWhiteSpaceArgument("test", logMessage, eventId);
+
+			Assert.AreEqual(value, argumentValue);
+
+		}
+
+
 	}
 }

@@ -45,5 +45,6 @@ namespace Microsoft.Omex.Extensions.Compatibility.UlsLoggerAdapter.UnitTests
 			ULSLogging.ReportExceptionTag(eventId, category, exception, logMessage);
 			Assert.AreEqual(1, mockLogger.Invocations.Count, "ULSLogging.ReportExceptionTag not calling ILogger");
 		}
+
 	}
 }

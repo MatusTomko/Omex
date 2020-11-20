@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.Omex.Extensions.Abstractions;
 using Microsoft.Omex.Extensions.Abstractions.Accessors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,6 +39,29 @@ namespace Microsoft.Omex.Extensions.Hosting.Services.UnitTests
 			setter.SetValue(value);
 
 			Assert.AreEqual(value, receivedContext);
+		}
+
+		[TestMethod]
+		public void GetValueOrThrow_CheckIfGetValue()
+		{
+			object value = new object();
+			Accessor<object> accessor = new Accessor<object>();
+			IAccessor<object> publicAccessor = accessor;
+			IAccessorSetter<object> setter = accessor;
+
+			setter.SetValue(value);
+			
+			Assert.AreEqual(publicAccessor.GetValueOrThrow(), value);
+		}
+
+		[TestMethod]
+		public void GetValueOrThrow_CheckIfThrowException()
+		{
+			object value = new object();
+			Accessor<object> accessor = new Accessor<object>();
+			IAccessor<object> publicAccessor = accessor;
+
+			Assert.ThrowsException<InvalidOperationException>(() => publicAccessor.GetValueOrThrow());
 		}
 	}
 }
